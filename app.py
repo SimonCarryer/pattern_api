@@ -2,14 +2,19 @@ from flask import Flask, jsonify
 from util.content_based import *
 from util.collaborative import *
 
-pattern_df = load_patterns('s3://ravelry-data/patterns_data.csv')
-pattern_features = transformed_features(pattern_df)
+print 'loading patterns data'
+#pattern_df = load_patterns('s3://ravelry-data/patterns_data.csv')
 
-user_df = load_user_likes('s3://ravelry-data/user_data.csv')
+print 'transforming patterns data'
+#pattern_features = transformed_features(pattern_df)
 
+print 'loading user data'
+#user_df = load_user_likes('s3://ravelry-data/user_data.csv')
+
+print 'starting app'
 app = Flask(__name__)
-app.config['content_rec'] = ContentBasedRecommender(pattern_df, pattern_features)
-app.config['collaborative_rec'] = CollaborativeRecommender(pattern_df, user_df)
+#app.config['content_rec'] = ContentBasedRecommender(pattern_df, pattern_features)
+#app.config['collaborative_rec'] = CollaborativeRecommender(pattern_df, user_df)
 
 @app.route('/')
 def api_root():
