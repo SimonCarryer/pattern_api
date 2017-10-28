@@ -40,7 +40,7 @@ class CollaborativeRecommender:
 if __name__ == '__main__':
 	data_path = 's3://ravelry-data/patterns_data.csv'
 	patterns_df = load_patterns(data_path)
-	data_path = '../../../../think_data/user_data.csv'
+	data_path = 's3://ravelry-data/user_data.csv'
 	user_df = load_user_likes(data_path)
 	rec = CollaborativeRecommender(patterns_df, user_df)
 	print rec.get_closest_n('cry-of-the-direwolf')

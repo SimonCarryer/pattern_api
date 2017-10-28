@@ -3,12 +3,12 @@ from util.content_based import *
 from util.collaborative import *
 
 pattern_df = load_patterns('s3://ravelry-data/patterns_data.csv')
-#pattern_features = transformed_features(pattern_df)
+pattern_features = transformed_features(pattern_df)
 
 user_df = load_user_likes('s3://ravelry-data/user_data.csv')
 
 app = Flask(__name__)
-#app.config['content_rec'] = ContentBasedRecommender(pattern_df, pattern_features)
+app.config['content_rec'] = ContentBasedRecommender(pattern_df, pattern_features)
 app.config['collaborative_rec'] = CollaborativeRecommender(pattern_df, user_df)
 
 @app.route('/')
