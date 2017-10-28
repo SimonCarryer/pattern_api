@@ -35,4 +35,4 @@ def collaborative(pattern_name):
 		return jsonify(["Doesn't look like we found anything"])
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', debug = False)
