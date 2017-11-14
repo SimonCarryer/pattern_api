@@ -1,25 +1,10 @@
 import pandas as pd
-from constants import required, fillna_dict
-from transform_objects import transform_set, weights
-from feature_engineers import *
-from copy import deepcopy
+from load_objects import load_compressed_pickled_object
 from sklearn.metrics.pairwise import pairwise_distances
-from sklearn.pipeline import FeatureUnion, Pipeline
-
-def load_patterns(filepath):
-	df = pd.read_csv(filepath)
-	df = df.dropna(subset=required)
-	df = df.fillna(fillna_dict)
-	return df
-	
-def transformed_features(df):
-	fu = FeatureUnion(transform_set, transformer_weights=weights)
-	fu.fit(df)
-	return fu.transform(df)
 	
 class ContentBasedRecommender:
-	def __init__(self, df, transformed_features):
-		self.pattern_names = list(df.permalink)
+	def __init__(self, pattern_names, transformed_features):
+		self.pattern_names = list(pattern_names)
 		self.features = transformed_features
 		
 	def get_closest_n(self, target, n=10):
@@ -29,8 +14,11 @@ class ContentBasedRecommender:
 		return [self.pattern_names[i] for i in closest]
 		
 if __name__ == '__main__':
-	data_path = 's3://ravelry-data/patterns_data.csv'
-	df = load_patterns(data_path)
-	features = transformed_features(df)
-	rec = ContentBasedRecommender(df, features)
+	features_url = 'https://s3.amazonaws.com/ravelry-data/features.pklz'
+	print 'loading features'
+	transformed_features = load_compressed_pickled_object(features_url)
+	pattern_names_url = 'https://s3.amazonaws.com/ravelry-data/pattern_names.pklz'
+	print 'loading patterns'
+	pattern_names = load_compressed_pickled_object(pattern_names_url)
+	rec = ContentBasedRecommender(pattern_names, transformed_features)
 	print rec.get_closest_n('hitofude-cardigan', 10)
